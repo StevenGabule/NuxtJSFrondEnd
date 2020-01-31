@@ -79,7 +79,7 @@ export default {
             password: this.form.password
           }
         });
-        this.$router.push("/profile");
+        this.$router.push("/dashboard");
       } catch (e) {
         this.error = e.response.data.message;
         // this.$store.dispatch("validation/setErrors", e.response.data.message);
