@@ -1,7 +1,6 @@
 <template>
   <div class="container col-md-6 mt-5">
     <h2>Login</h2>
-       <Notification :message="error" v-if="error" />
     <form @submit.prevent="submit">
       <div class="form-group">
         <label>Email address</label>
@@ -32,14 +31,9 @@
 </template>
 
 <script>
-import Notification from "~/components/Notification";
 export default {
 
   middleware: ['guest'],
-
-  components: {
-    Notification,
-  },
 
   data() {
     return {
@@ -58,7 +52,6 @@ export default {
         });
         this.$router.push('/dashboard');
       } catch(e) {
-        this.error = e.response.data.message
       }
     }
   }
