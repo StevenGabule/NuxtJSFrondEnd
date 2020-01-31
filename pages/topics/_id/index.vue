@@ -15,8 +15,20 @@
           <p>{{ content.body }}</p>
           <div v-if="authenticated">
             <div v-if="user.id === content.user.id">
-              <nuxt-link class="btn btn-info btn-sm" :to="{ name: 'topics-posts-edit', params: { id: content.id } }">Edit</nuxt-link>
-              <button @click="DeletePost(content.id)" class="btn btn-danger btn-sm">Delete</button>
+              <nuxt-link
+                class="btn btn-info btn-sm"
+                :to="{
+                  name: 'topics-posts-edit',
+                  params: { id: $route.params.id, body: content.id }
+                }"
+                >Edit</nuxt-link
+              >
+              <button
+                @click="DeletePost(content.id)"
+                class="btn btn-danger btn-sm"
+              >
+                Delete
+              </button>
             </div>
           </div>
           <p class="text-muted">
@@ -74,8 +86,8 @@ export default {
       } catch (e) {}
     },
     async DeletePost(id) {
-        await this.$axios.$delete(`/topics/${this.$route.params.id}/posts/${id}`);
-        this.$router.push('/topics');
+      await this.$axios.$delete(`/topics/${this.$route.params.id}/posts/${id}`);
+      this.$router.push("/topics");
     }
   }
 };
