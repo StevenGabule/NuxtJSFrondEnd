@@ -19,8 +19,17 @@
             </h2>
             <div v-if="authenticated">
               <div v-if="user.id === topic.user.id">
-                <nuxt-link :to="{ name: 'topics-edit', params: { id: topic.id } }" class="btn btn-info btn-sm">Edit</nuxt-link>
-                <button @click="DeleteTopic(topic.id)" class="btn btn-danger btn-sm">delete</button>
+                <nuxt-link
+                  :to="{ name: 'topics-edit', params: { id: topic.id } }"
+                  class="btn btn-info btn-sm"
+                  >Edit</nuxt-link
+                >
+                <button
+                  @click="DeleteTopic(topic.id)"
+                  class="btn btn-danger btn-sm"
+                >
+                  delete
+                </button>
               </div>
             </div>
             <p class="text-muted">
@@ -35,6 +44,13 @@
               <p class="text-muted">
                 {{ content.created_at }} by {{ content.user.name }}
               </p>
+              <!-- add likes button -->
+              <div
+                class="btn btn-outline-primary ml-5 mb-2"
+                @click="likePost(topic.id, content)"
+              >
+                Like <span class="badge">{{ content.like_count }}</span>
+              </div>
             </div>
           </div>
           <nav>
@@ -70,19 +86,53 @@ export default {
     return { topics: data, links };
   },
   methods: {
+    
     async loadMore(key) {
-      let { data } = await this.$axios.$get(key);
-      return (this.topics = { ...this.topics, ...data });
+        let { data } = await this.$axios.$get(key);
+        return (this.topics = { ...this.topics, ...data });
     },
+    
     async DeleteTopic(topicId) {
       try {
         await this.$axios.delete(`/topics/${topicId}`);
         console.info("Deleted topic");
-        this.$router.push('/topics');
-      } catch(e) {}
+        this.$router.push("/topics");
+      } catch (e) {}
+    },
+
+    async likePost(topicId, content) {
+      const userFromVuex = this.$store.getters["user"];
+      if (userFromVuex) {
+        // cant like your own post
+        try {
+          if (userFromVuex.id === content.user.id) {
+            alert("You cant like your own post");
+          }
+          // if user have already liked
+          if (content.users) {
+            if (content.users.some(user => user.id === userFromVuex.id)) {
+              alert("You have already liked this post");
+            } else {
+              await this.$axios.$post(
+                `/topics/${topicId}/posts/${content.id}/likes`
+              );
+              let { data, links } = await this.$axios.$get(`/topics`);
+              this.topics = data;
+              this.links = links;
+            }
+          }
+        } catch (e) {}
+    
+    } else {
+        alert("Please log in");
+        this.$router.push("/login");
+      }
     }
+
   }
+
 };
+
 </script>
 <style scoped>
 .content {

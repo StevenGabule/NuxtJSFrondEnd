@@ -19,9 +19,6 @@
           <li class="nav-item">
             <nuxt-link class="nav-link" to="/">Home</nuxt-link>
           </li>
-          <li class="nav-item">
-            <nuxt-link class="nav-link" to="/posts">Posts</nuxt-link>
-          </li>
 
           <li class="nav-item">
             <nuxt-link class="nav-link" to="/dashboard">Create</nuxt-link>
